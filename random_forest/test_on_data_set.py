@@ -1,7 +1,9 @@
 from __future__ import with_statement
+
 import ConfigParser
-import random_forest
 import sys
+
+from random_forest import random_forest
 
 
 def fire_risk_assessment():
