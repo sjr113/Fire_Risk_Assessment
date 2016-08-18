@@ -4,12 +4,14 @@ from pyspark import SparkContext
 from pyspark.sql import SQLContext
 # $example on$
 from pyspark.ml.classification import LogisticRegression
+from pyspark.mllib.classification import LogisticRegressionWithSGD
 from pyspark.mllib.util import MLUtils
+from pyspark.mllib.evaluation import MulticlassMetrics
 # $example off$
 import sys
 
 
-if __name__ == "__main__":
+def lr_ml():
     sc = SparkContext(appName="LogisticRegressionWithElasticNet")
     # sqlContext = SQLContext(sc)
 
@@ -29,3 +31,45 @@ if __name__ == "__main__":
 
     sc.stop()
 
+
+if __name__ == "__main__":
+    sc = SparkContext(appName="LogisticRegressionWithElasticNet")
+    # valdata_path = "/user/tmp/sample_libsvm_data.txt"
+    valexamples = MLUtils.loadLibSVMFile(sc, sys.argv[1]).cache()
+
+    # split the samples to training samples and testing samples
+    valsplits = valexamples.randomSplit([0.6, 0.4], seed=11L)
+    valtraining = valsplits[0].cache()
+    valtest = valsplits[1]
+    valnumTraining = valtraining.count()
+    valnumTest = valtest.count()
+    # print(s"Training: $numTraining, test: $numTest.")
+    print("miao-miao-miao-miao-miao-miao-miao-miao-miao-miao-miao-miao-miao-miao-miao")
+    print("Training" + str(valnumTraining) + "  Testing" + str(valnumTest))
+
+    valnumIterations = 1000
+    valstepSize = 1
+    valminiBatchFraction = 1.0
+    valmodel = LogisticRegressionWithSGD.train(valtraining, valnumIterations, valstepSize, valminiBatchFraction)
+
+    # valprediction = valmodel.predict(valtest.map(lambda x: x.features))
+    # valpredictionAndLabel = valprediction.zip(valtest.map(lambda x: x.label) * 1.0)
+    valpredictionAndLabel = valtest.map(lambda lp: (float(valmodel.predict(lp.features)), lp.label))
+    valmetrics = MulticlassMetrics(valpredictionAndLabel)
+
+    print("miao--miao--miao--miao--miao--miao--miao--miao--miao--miao--miao--miao--miao")
+
+    precision = valmetrics.precision()
+    recall = valmetrics.recall()
+    f1Score = valmetrics.fMeasure()
+    print("Summary Stats")
+    print("Precision = %s" % precision)
+    print("Recall = %s" % recall)
+    print("F1 Score = %s" % f1Score)
+
+    # result
+    # Summary Stats
+    # Precision = 1.0
+    # Recall = 1.0
+    # F1
+    # Score = 1.0

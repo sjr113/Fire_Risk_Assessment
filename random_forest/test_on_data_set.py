@@ -3,7 +3,7 @@ from __future__ import with_statement
 import ConfigParser
 import sys
 
-from random_forest import random_forest
+import random_forest
 
 
 def fire_risk_assessment():
@@ -57,8 +57,9 @@ if __name__ == "__main__":
                              str(c_num_trees)
                 model_path = sys.argv[2] + "/" + model_name
                 # run the regressor of random forest
-                random_forest.random_forest_regressor(data_set, model_path, radio_of_training_set, c_max_depth,
-                                                      c_max_bins, c_num_trees)
+                # random_forest.random_forest_regressor(data_set, model_path, radio_of_training_set, c_max_depth,
+                #                                       c_max_bins, c_num_trees)
+                random_forest.rdf(data_set)
                 print model_path
 
     print data_set

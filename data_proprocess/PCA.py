@@ -3,7 +3,7 @@ from __future__ import print_function
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
 # $example on$
-from pyspark.ml.feature import PCA
+import pyspark.ml.feature as fea
 from pyspark.mllib.linalg import Vectors
 # $example off$
 
@@ -13,7 +13,8 @@ def PCA(data_set, pca_k=3):
     sqlContext = SQLContext(sc)
 
     df = sqlContext.createDataFrame(data_set, ["features"])
-    pca = PCA(k=3, inputCol="features", outputCol="pcaFeatures")
+    pca = fea.PCA(k=3, inputCol="features", outputCol="pcaFeatures")
+    
     model = pca.fit(df)
     result = model.transform(df).select("pcaFeatures")
     result.show(truncate=False)
