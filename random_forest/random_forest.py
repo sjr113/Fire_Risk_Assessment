@@ -10,13 +10,13 @@ from pyspark.ml import Pipeline
 from pyspark.ml.regression import RandomForestRegressor
 from pyspark.ml.feature import VectorIndexer
 from pyspark.ml.evaluation import RegressionEvaluator
-from pyspark.mllib.util import MLUtils
 
 import sys
 from pyspark.mllib.tree import RandomForest, RandomForestModel
 from pyspark.mllib.util import MLUtils
 
 
+# It is only adapt to spark 2.0.0
 def random_forest_regressor(data_set, model_path, radio_of_training_set=0.7, max_depth=5, max_bins = 32, num_trees=20):
     sc = SparkContext(appName="random_forest_regressor_example")
     # sqlContext = SQLContext(sc)
@@ -66,21 +66,21 @@ def random_forest_regressor(data_set, model_path, radio_of_training_set=0.7, max
     sc.stop()
 
 
-def rdf(data_set):
-    sc = SparkContext(appName="PythonRandomForestRegressionExample")
+def spark_1_4_random_forest_regressor(data_set, model_path, radio_of_training_set=0.7, max_depth=5, max_bins = 32, num_trees=20):
+    sc = SparkContext(appName="PythonRandomForestRegressionExample" + "num_trees" + str(num_trees))
     # $example on$
     # Load and parse the data file into an RDD of LabeledPoint.
     data = MLUtils.loadLibSVMFile(sc, data_set)
     # Split the data into training and test sets (30% held out for testing)
-    (trainingData, testData) = data.randomSplit([0.7, 0.3])
+    (trainingData, testData) = data.randomSplit([radio_of_training_set, 1-radio_of_training_set])
 
     # Train a RandomForest model.
     #  Empty categoricalFeaturesInfo indicates all features are continuous.
     #  Note: Use larger numTrees in practice.
     #  Setting featureSubsetStrategy="auto" lets the algorithm choose.
     model = RandomForest.trainRegressor(trainingData, categoricalFeaturesInfo={},
-                                        numTrees=3, featureSubsetStrategy="auto",
-                                        impurity='variance', maxDepth=4, maxBins=32)
+                                        numTrees=num_trees, featureSubsetStrategy="auto",
+                                        impurity='variance', maxDepth=max_depth, maxBins=max_bins)
 
     # Evaluate model on test instances and compute test error
     predictions = model.predict(testData.map(lambda x: x.features))
@@ -92,9 +92,11 @@ def rdf(data_set):
     print(model.toDebugString())
 
     # # Save and load model
-    # model.save(sc, "target/tmp/myRandomForestRegressionModel")
+    model.save(sc, model_path)
     # sameModel = RandomForestModel.load(sc, "target/tmp/myRandomForestRegressionModel")
     # # $example off$
+
+    sc.stop()
 
     # result:
     # Test Mean Squared Error = 0.00358422939068

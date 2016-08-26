@@ -2,18 +2,18 @@ from __future__ import with_statement
 
 import ConfigParser
 import sys
+import os
 
 import random_forest
-
-
-def fire_risk_assessment():
-    pass
 
 
 if __name__ == "__main__":
 
     # random forest algorithm
     # config the object of ConfigParser to make the .conf to parser
+    # print os.getcwd()
+    # os.chdir("/home/jiangrongshen/PycharmProjects/FireAssessment/random_forest/")
+    print os.getcwd()
     config = ConfigParser.ConfigParser()
     with open("fra_conf.conf", "rw") as conf_file:
         config.readfp(conf_file)
@@ -59,7 +59,11 @@ if __name__ == "__main__":
                 # run the regressor of random forest
                 # random_forest.random_forest_regressor(data_set, model_path, radio_of_training_set, c_max_depth,
                 #                                       c_max_bins, c_num_trees)
-                random_forest.rdf(data_set)
+                # random_forest.rdf(data_set)
+
+                print c_num_trees
+                print "number tree is " + str(c_num_trees) + "----------------------------------------------"
+                random_forest.spark_1_4_random_forest_regressor(data_set, model_path, radio_of_training_set, c_max_depth, c_max_bins, c_num_trees)
                 print model_path
 
     print data_set
