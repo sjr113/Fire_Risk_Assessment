@@ -19,10 +19,9 @@ def normalize():
     # Each sample in data2 will be normalized using $L^\infty$ norm.
     data2 = labels.zip(normalizer2.transform(features))
 
+    data1.saveAsLibSVMFile(sc, sys.argv[2])
     print "_______________________________________"
     print "///////////////////////////////////////"
-    print data
-    print data1
 
     sc.stop()
 

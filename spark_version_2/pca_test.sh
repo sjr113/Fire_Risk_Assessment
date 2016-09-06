@@ -10,7 +10,7 @@ spark-submit \
 --driver-memory 4g \
 --executor-memory 2g \
 --executor-cores 4 \
-/home/spark/test_spark_sjr/fire_risk_assessment/PCA.py file:/home/spark/test_spark_sjr/fire_risk_assessment/sample_libsvm_data.txt file:/home/spark/test_spark_sjr/fire_risk_assessment/data_save/data_pca
+/home/spark/test_spark_sjr/fire_risk_assessment/PCA.py
 
 # stop the master and the slaves
 stop-all.sh

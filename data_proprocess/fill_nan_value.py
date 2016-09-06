@@ -141,60 +141,80 @@ def CatToDummy(data, catfct_cols):
 
 # ---------------------------------------------------------------
 # Finally we do the test.
-import numpy as np
+import sys
+import data_read_and_form_transform.trans_data_from_libsvm_to_normal as data_trans
+import data_read_and_form_transform.trans_data_from_normal_to_libsvm as libsvm_trans
+
+
+def test_on_fill_nan_value():
+    label, data_set = data_trans.trans_data_from_libsvm_to_normal(sys.argv[1])
+    method = sys.argv[2]
+    num_feature = len(data_set[0])
+    num_sample = len(label)
+    data = pd.DataFrame(data_set, index=range(num_sample), columns=range(num_feature))
+    print "-------------------------------------------------------------"
+    newData = []
+    if method == "method_of_delete":
+        # mothod 1 : test
+        print "___method_1___delete the feature columns which miss many values-------------------------------------"
+        # This method fill the nan value through the method of "mean","menoid" and so on.
+        numValue, dropFeacture_cols = FindFeactureNAorValue(data, feacture_cols=range(num_feature), axis=0, value='nan',
+                                                            prob_dropFct=0.3)
+        print numValue, dropFeacture_cols
+
+        newData = data.copy(deep=True)
+        newData.drop(dropFeacture_cols, axis=1, inplace=True)
+        # data.drop(dropFeacture_cols, axis=1, inplace=True)
+
+    elif method == "method_of_fill":
+        print "__method_2___fill the missing values with mean values and so on---------------------------------------"
+        newData = FillNAorValueOfNum(data, numFct_cols=range(num_feature), value='nan', replaceNA='mean')
+
+    elif method == "method_of_replace":
+        print "__method_3___replace the feature with 0 1 to map it to higher dimensions-------------------------------"
+        # This method make the nan value be two features, that is to map the value to higher d.
+        newData = GetNewValueOfNAfeacture(data, feacture_cols=range(num_feature))
+
+    else:
+        print "The input is illegal..."
+
+    libsvm_trans.se_trans_data_from_normal_to_libsvm(label, newData, sys.argv[3])
+
+
 if __name__ == "__main__":
-    def trans_data():
-        f = open("fra_data")
-        line = f.readline()
-        list1 = []
-        while line:
-            # print line
-            arr = map(float, line.split())
-            list1.append(arr)
-            print arr
-            line = f.readline()
-
-        f.close()
-        return list1
-
-
-    list1 = trans_data()
-    label = np.zeros(6)
-    data_set = np.zeros((6, 64))
-    for i in range(6):
-        arr = list1[i]
-        label[i] = arr[0]
-        data_set[i] = arr[1:]
-
-    print "___data___-------------------------------------"
-    print np.shape(data_set)
-    print data_set
-    print label
-
-    # mothod 1 : test
-    data = pd.DataFrame(data_set, index=range(6), columns=range(64))
-    print data
-    print "___method_1___delete the feature columns which miss many values-------------------------------------"
-    # This method fill the nan value through the method of "mean","menoid" and so on.
-    numValue, dropFeacture_cols = FindFeactureNAorValue(data, feacture_cols=range(64), axis=0, value='nan', prob_dropFct=0.3)
-    print numValue, dropFeacture_cols
-
-    method_1_data = data.copy(deep=True)
-    method_1_data.drop(dropFeacture_cols, axis=1, inplace=True)
-    # data.drop(dropFeacture_cols, axis=1, inplace=True)
-
-    print "__method_2___fill the missing values with mean values and so on---------------------------------------"
-    print data[50]
-    print data[49]
-    newData = FillNAorValueOfNum(data, numFct_cols=range(64), value='nan', replaceNA='mean')
-    print newData[50]
-    print newData[49]
-
-    print "__method_3___replace the feature with 0 1 to map it to higher dimensions-------------------------------"
-    # This method make the nan value be two features, that is to map the value to higher d.
-    newData = GetNewValueOfNAfeacture(data, feacture_cols=range(64))
-    print newData
-    print newData[50]
-    print newData[49]
+    # print os.getcwd()
+    # data_set, label = data_trans.read_data_of_normal_form("/home/jiangrongshen/PycharmProjects/FireAssessment//data_read_and_form_transform/example_normal_data_file")
+    #
+    # num_feature = len(data_set[0])
+    # num_sample = len(label)
+    # # mothod 1 : test
+    # data = pd.DataFrame(data_set, index=range(num_sample), columns=range(num_feature))
+    # print "-------------------------------------------------------------"
+    #
+    # print data
+    # print "___method_1___delete the feature columns which miss many values-------------------------------------"
+    # # This method fill the nan value through the method of "mean","menoid" and so on.
+    # numValue, dropFeacture_cols = FindFeactureNAorValue(data, feacture_cols=range(num_feature), axis=0, value='nan', prob_dropFct=0.3)
+    # print numValue, dropFeacture_cols
+    #
+    # method_1_data = data.copy(deep=True)
+    # method_1_data.drop(dropFeacture_cols, axis=1, inplace=True)
+    # # data.drop(dropFeacture_cols, axis=1, inplace=True)
+    #
+    # print "__method_2___fill the missing values with mean values and so on---------------------------------------"
+    # print data[50]
+    # print data[49]
+    # newData = FillNAorValueOfNum(data, numFct_cols=range(num_feature), value='nan', replaceNA='mean')
+    # print newData[50]
+    # print newData[49]
+    #
+    # print "__method_3___replace the feature with 0 1 to map it to higher dimensions-------------------------------"
+    # # This method make the nan value be two features, that is to map the value to higher d.
+    # newData = GetNewValueOfNAfeacture(data, feacture_cols=range(num_feature))
+    # print newData
+    # print newData[50]
+    # print newData[49]
+    pass
+    test_on_fill_nan_value()
 
 
