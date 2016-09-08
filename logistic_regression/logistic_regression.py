@@ -33,7 +33,7 @@ def lr_ml():
 
 
 def spark_1_4_logistic_regression(data_set, model_path, radio_of_training_set, c_valnumIterations, c_valstepSize,
-                                  c_valminiBatchFraction):
+                                  c_valminiBatchFraction, data_path):
     sc = SparkContext(appName="LogisticRegressionWithElasticNet" + "c_valnumIterations" + str(c_valnumIterations))
     # valdata_path = "/user/tmp/sample_libsvm_data.txt"
     valexamples = MLUtils.loadLibSVMFile(sc, data_set).cache()
@@ -45,7 +45,7 @@ def spark_1_4_logistic_regression(data_set, model_path, radio_of_training_set, c
     valnumTraining = valtraining.count()
     valnumTest = valtest.count()
     # print(s"Training: $numTraining, test: $numTest.")
-    print("miao-miao-miao-miao-miao-miao-miao-miao-miao-miao-miao-miao-miao-miao-miao")
+
     print("Training" + str(valnumTraining) + "  Testing" + str(valnumTest))
 
     valnumIterations = c_valnumIterations
@@ -60,7 +60,6 @@ def spark_1_4_logistic_regression(data_set, model_path, radio_of_training_set, c
 
     # # Save and load model
     valmodel.save(sc, model_path)
-    print("miao--miao--miao--miao--miao--miao--miao--miao--miao--miao--miao--miao--miao")
 
     precision = valmetrics.precision()
     recall = valmetrics.recall()
@@ -70,6 +69,7 @@ def spark_1_4_logistic_regression(data_set, model_path, radio_of_training_set, c
     print("Recall = %s" % recall)
     print("F1 Score = %s" % f1Score)
 
+    # precision.saveAsTextFile(data_path)
     sc.stop()
 
     # result

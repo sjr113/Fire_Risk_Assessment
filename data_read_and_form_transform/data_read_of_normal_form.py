@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def read_data_of_normal_form(file_name):
+def read_data_of_normal_form(file_name, num_sample = 6, num_feature=64):
     f = open(file_name)
     line = f.readline()
     list1 = []
@@ -14,9 +14,9 @@ def read_data_of_normal_form(file_name):
 
     f.close()
 
-    label = np.zeros(6)
-    data_set = np.zeros((6, 64))
-    for i in range(6):
+    label = np.zeros(num_sample)
+    data_set = np.zeros((num_sample, num_feature))
+    for i in range(num_sample):
         arr = list1[i]
         label[i] = arr[0]
         data_set[i] = arr[1:]

@@ -2,6 +2,7 @@ from pyspark import SparkContext
 from pyspark.mllib.util import MLUtils
 import sys
 from pyspark.mllib.tree import RandomForestModel
+from pyspark.mllib.tree import RandomForest
 from pyspark.mllib.classification import LogisticRegressionModel
 from pyspark.mllib.evaluation import MulticlassMetrics
 
@@ -14,14 +15,17 @@ def test_on_random_forest_model():
 
     same_model = RandomForestModel.load(sc, sys.argv[2])
 
-    # Evaluate model on test instances and compute test error
     predictions = same_model.predict(test_data.map(lambda x: x.features))
-    labelsAndPredictions = test_data.map(lambda lp: lp.label).zip(predictions)
-    testMSE = labelsAndPredictions.map(lambda (v, p): (v - p) * (v - p)).sum() / \
-              float(test_data.count())
-    print('Test Mean Squared Error = ' + str(testMSE))
-    print('Learned regression forest model:')
-    print(same_model.toDebugString())
+
+    # predict
+    # # Evaluate model on test instances and compute test error
+
+    # labelsAndPredictions = test_data.map(lambda lp: lp.label).zip(predictions)
+    # testMSE = labelsAndPredictions.map(lambda (v, p): (v - p) * (v - p)).sum() / \
+    #           float(test_data.count())
+    # print('Test Mean Squared Error = ' + str(testMSE))
+    # print('Learned regression forest model:')
+    # print(same_model.toDebugString())
 
     sc.stop()
 
@@ -40,25 +44,29 @@ def test_on_logistic_regression_model():
     valmetrics = MulticlassMetrics(valpredictionAndLabel)
 
     # Evaluate model on test instances and compute test error
+    same_model.clearThreshold()
     predictions = same_model.predict(test_data.map(lambda x: x.features))
-    labelsAndPredictions = test_data.map(lambda lp: lp.label).zip(predictions)
-    testMSE = labelsAndPredictions.map(lambda (v, p): (v - p) * (v - p)).sum() / \
-              float(test_data.count())
-    print('Test Mean Squared Error = ' + str(testMSE))
-    # print('Learned regression forest model:')
-    # print(same_model.toDebugString())
 
-    precision = valmetrics.precision()
-    recall = valmetrics.recall()
-    f1Score = valmetrics.fMeasure()
-    print("Summary Stats")
-    print("Precision = %s" % precision)
-    print("Recall = %s" % recall)
-    print("F1 Score = %s" % f1Score)
+    #  Predict
+    # labelsAndPredictions = test_data.map(lambda lp: lp.label).zip(predictions)
+    # testMSE = labelsAndPredictions.map(lambda (v, p): (v - p) * (v - p)).sum() / \
+    #           float(test_data.count())
+    # print('Test Mean Squared Error = ' + str(testMSE))
+    # # print('Learned regression forest model:')
+    # # print(same_model.toDebugString())
+    #
+    # precision = valmetrics.precision()
+    # recall = valmetrics.recall()
+    # f1Score = valmetrics.fMeasure()
+    # print("Summary Stats")
+    # print("Precision = %s" % precision)
+    # print("Recall = %s" % recall)
+    # print("F1 Score = %s" % f1Score)
+    predictions.repartition(1).saveAsTextFile(sys.argv[3])
 
     sc.stop()
 
 
 if __name__ == "__main__":
-    test_on_random_forest_model()
-    # test_on_logistic_regression_model()
+    # test_on_random_forest_model()
+    test_on_logistic_regression_model()

@@ -10,7 +10,7 @@ spark-submit \
 --driver-memory 4g \
 --executor-memory 2g \
 --executor-cores 4 \
-/home/spark/test_spark_sjr/fire_risk_assessment/test_on_data_set/test_on_data_set.py file:/home/spark/test_spark_sjr/fire_risk_assessment/sample_libsvm_data.txt file:/home/spark/test_spark_sjr/fire_risk_assessment/model_save/model_of_max_depth_5_max_bins_32_num_trees_10
+/home/spark/test_spark_sjr/fire_risk_assessment/test_on_data_set/test_on_data_set.py file:/home/spark/test_spark_sjr/fire_risk_assessment/sample_libsvm_data.txt file:/home/spark/test_spark_sjr/fire_risk_assessment/model_save/model_of_max_depth_5_max_bins_32_num_trees_10 file:/home/spark/test_spark_sjr/fire_risk_assessment/result_save
 # /home/spark/test_spark_sjr/fire_risk_assessment/test_on_data_set/test_on_data_set.py file:/home/spark/test_spark_sjr/fire_risk_assessment/sample_libsvm_data.txt file:/home/spark/test_spark_sjr/fire_risk_assessment/model_save/model_of_valnumIterations_1000_stepSize_1_miniBatchFraction_1.0
 
 

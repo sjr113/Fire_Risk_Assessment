@@ -69,18 +69,24 @@ import sys
 import data_read_and_form_transform.trans_data_from_libsvm_to_normal as data_trans
 import data_read_and_form_transform.trans_data_from_normal_to_libsvm as libsvm_trans
 
-def test_PCA():
-    a = "/home/jiangrongshen/PycharmProjects/FireAssessment/data_read_and_form_transform/example_libsvm_data_file.txt"
-    b = "/home/jiangrongshen/PycharmProjects/FireAssessment/data_read_and_form_transform/test_example_libsvm_data_file.txt"
+def test_PCA(a, b, num):
 
     label, data_set = data_trans.trans_data_from_libsvm_to_normal(a)
     print data_set
+
     num_feature = len(data_set[0])
     num_sample = len(label)
 
     data_set = np.array(data_set)
+    print np.shape(data_set[0])
+    print np.shape(data_set[1])
+    print np.shape(data_set[2])
+    print np.shape(data_set[3])
+    print np.shape(data_set[4])
+    print np.shape(data_set[5])
+    print np.shape(data_set)
     print data_set
-    lowDDataMat, reconMat = principle_component_analysis(data_set, 2)
+    lowDDataMat, reconMat = principle_component_analysis(data_set, num)
 
     plotBestFit(lowDDataMat, reconMat)
 
@@ -95,4 +101,8 @@ if __name__ == '__main__':
     # sc = SparkContext(appName="LogisticRegressionWithElasticNet")
     # training = MLUtils.loadLibSVMFile(sc, sys.argv[1])
 
-    test_PCA()
+    # a = "/home/jiangrongshen/PycharmProjects/FireAssessment/data_read_and_form_transform/example_libsvm_data_file.txt"
+    # b = "/home/jiangrongshen/PycharmProjects/FireAssessment/data_read_and_form_transform/test_example_libsvm_data_file.txt"
+
+    test_PCA(sys.argv[1], sys.argv[3], int(sys.argv[2]))
+    # test_PCA(a, b, 2)

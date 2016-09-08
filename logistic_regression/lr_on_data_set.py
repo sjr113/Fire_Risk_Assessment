@@ -57,6 +57,7 @@ if __name__ == "__main__":
                              + "_miniBatchFraction_" + \
                              str(c_valminiBatchFraction)
                 model_path = sys.argv[2] + "/" + model_name
+                data_path = sys.argv[3] + "/" + model_name + "_result.txt"
                 # run the regressor of random forest
                 # random_forest.random_forest_regressor(data_set, model_path, radio_of_training_set, c_max_depth,
                 #                                       c_max_bins, c_num_trees)
@@ -66,12 +67,11 @@ if __name__ == "__main__":
                 print "c_valminiBatchFraction is " + str(c_valminiBatchFraction) + "----------------------------------------------"
 
                 logistic_regression.spark_1_4_logistic_regression(data_set, model_path, radio_of_training_set,
-                                                                  c_valnumIterations, c_valstepSize, c_valminiBatchFraction)
+                                                                  c_valnumIterations, c_valstepSize, c_valminiBatchFraction, data_path)
                 print model_path
 
     print data_set
-    print radio_of_training_set, c_valnumIterations, c_valstepSize, c_valminiBatchFraction
-
+    print radio_of_training_set
 
 
 

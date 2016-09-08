@@ -17,9 +17,9 @@ def normalize():
     data1 = labels.zip(normalizer1.transform(features))
 
     # Each sample in data2 will be normalized using $L^\infty$ norm.
-    data2 = labels.zip(normalizer2.transform(features))
+    # data2 = labels.zip(normalizer2.transform(features))
 
-    data1.saveAsLibSVMFile(sc, sys.argv[2])
+    # MLUtils.saveAsLibSVMFile(data1, sys.argv[2])
     print "_______________________________________"
     print "///////////////////////////////////////"
 
